@@ -1,6 +1,6 @@
 # Access Control
 
-> ⚠️ 此文件及 `admins.yaml` **只有 SuperAdmin 可以修改**。
+> ⚠️ 此文件及 `admins.yaml` **只有 superadmin 可以修改**。
 > 修改后在对话中说「刷新技能」生效。
 
 ---
@@ -11,7 +11,7 @@
 
 ```
 config/
-├── admins.yaml        ← 实际数据：SuperAdmin 和 Admin 的平台 ID
+├── admins.yaml        ← 实际数据：superadmin 和 admin 的平台 ID
 └── access-control.md  ← 本文件：规则说明与权限矩阵
 ```
 
@@ -21,23 +21,22 @@ config/
 
 | 角色 | 定义 |
 |------|------|
-| **SuperAdmin** | `admins.yaml` 中 `superadmins` 列表，可有多个，拥有全部权限。**只能通过手动编辑代码修改，不支持通过对话添加/移除。** |
-| **Admin** | `admins.yaml` 中 `admins` 列表，由 SuperAdmin 管理 |
-| **User** | 不在以上列表中的所有人 |
+| **superadmin** | `admins.yaml` 中 `superadmins` 列表，可有多个，拥有全部权限。**只能通过手动编辑代码修改，不支持通过对话添加/移除。** |
+| **admin** | `admins.yaml` 中 `admins` 列表，由 superadmin 管理 |
+| **user** | 不在以上列表中的所有人 |
 
 ---
 
 ## 权限矩阵
 
-| 操作 | SuperAdmin | Admin | User |
+| 操作 | superadmin | admin | user |
 |------|-----------|-------|------|
 | 查询知识库 | ✅ | ✅ | ✅ |
-| 通过对话更新 `knowledge/`（Bot 调 GitHub API 自动提交） | ✅ | ✅ | ❌ |
-| knowledge/ PR 需要 review 才能合并 | — | ❌（自动合并） | — |
+| 通过对话更新 `knowledge/`（Bot 调 GitHub API 直接提交） | ✅ | ✅ | ❌ |
 | 通过 PR 修改系统文件（SKILL.md、SOUL.md 等） | ✅（手动） | ❌ | ❌ |
-| 修改 `config/admins.yaml`（Admin 管理） | ✅（手动改代码） | ❌ | ❌ |
+| 修改 `config/admins.yaml`（admin 管理） | ✅（手动改代码） | ❌ | ❌ |
 | 修改 `config/admins.yaml`（superadmins 管理） | ✅（手动改代码） | ❌ | ❌ |
-| 通过对话添加/移除 Admin | ✅ | ❌ | ❌ |
+| 通过对话生成 admin 配置（手动提交到 repo 生效） | ✅ | ❌ | ❌ |
 | 查看权限列表 | ✅ | ❌ | ❌ |
 | 查看系统状态 | ✅ | ❌ | ❌ |
 

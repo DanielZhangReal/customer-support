@@ -1,19 +1,20 @@
 # OpenClaw Customer Support Skill
 
-通用智能客服 Skill 模板，支持 Telegram 和 Discord 双平台，基于知识库自动回答问题，三级权限管理，知识库通过 git PR 维护。
+通用智能客服 Skill 模板，支持 Telegram 和 Discord 双平台，基于知识库自动回答问题，三级权限管理，知识库通过 GitHub API 自动提交维护。
 
 ## 文件结构
 
 ```
 customer-support/
-├── SOUL.md                      ← AI 人格定义、安全规则（SuperAdmin 才能修改）
+├── SOUL.md                      ← AI 人格定义、安全规则（superadmin 才能修改）
 ├── SKILL.md                     ← Skill 行为定义：意图路由、回复规范、权限逻辑
 ├── CHANGELOG.md                 ← 版本变更记录
 ├── README.md                    ← 本文件
 ├── config/
-│   └── access-control.md        ← 权限配置：SuperAdmin 和 Admin 的平台 ID（SuperAdmin 才能修改）
-└── knowledge/                   ← 知识库（Admin 可通过 git PR 修改）
-    ├── _index.md                ← 知识库版本 + 标签索引（每次 PR 必须更新）
+│   ├── admins.yaml              ← 权限数据：superadmins 和 admins 的平台 ID（手动编辑，superadmin 专属）
+│   └── access-control.md        ← 权限文档：角色说明与权限矩阵
+└── knowledge/                   ← 知识库（admin 通过对话更新，Bot 自动提交）
+    ├── _index.md                ← 知识库版本 + 标签索引（每次 Bot 提交时自动更新）
     ├── overview.md              ← 产品/项目概述、核心功能、术语
     ├── faq.md                   ← 常见问题解答
     ├── guides.md                ← 使用指南、快速上手
@@ -46,7 +47,7 @@ mv customer-support ~/.openclaw/workspace/skills/customer-support
 
 ### 1. 配置权限
 
-编辑 `config/admins.yaml`，填入 SuperAdmin 和 Admin 的平台 ID：
+编辑 `config/admins.yaml`，填入 superadmin 和 admin 的平台 ID：
 
 ```yaml
 superadmins:
@@ -81,15 +82,15 @@ grep -r "example.com" knowledge/
 
 ## 知识库维护
 
-### Admin 更新知识库（仅限 `knowledge/`）
+### admin 更新知识库（仅限 `knowledge/`）
 
 1. 在对话中告诉 Bot 要更新什么，Bot 会整理好格式给你确认
-2. Admin 确认后，Bot 自动调用 GitHub API 提交到 main 分支
+2. admin 确认后，Bot 自动调用 GitHub API 提交到 main 分支
 3. 说「刷新技能」生效
 
 > 需在环境变量中配置 `GITHUB_TOKEN`（`contents:write` 权限）、`GITHUB_REPO`（`owner/repo`）、`GITHUB_BASE_BRANCH`（默认 `main`）。
 
-### SuperAdmin 更新系统文件
+### superadmin 更新系统文件
 
 系统文件（SOUL.md、SKILL.md、config/ 等）只能通过手动 git PR 修改，提交时需同步更新 `SKILL.md` 版本号和 `CHANGELOG.md`。
 
@@ -107,9 +108,9 @@ grep -r "example.com" knowledge/
 
 | 角色 | 能做什么 | 不能做什么 |
 |------|---------|----------|
-| **SuperAdmin** | 全部权限 | — |
-| **Admin** | 通过 PR 更新 `knowledge/`、知识库查询 | 修改系统文件、管理权限 |
-| **User** | 知识库查询 | 所有写操作 |
+| **superadmin** | 全部权限 | — |
+| **admin** | 通过对话更新 `knowledge/`（Bot 自动提交）、知识库查询 | 修改系统文件、管理权限 |
+| **user** | 知识库查询 | 所有写操作 |
 
 身份识别基于平台用户 ID（Telegram UID / Discord 用户 ID），与用户名无关。
 

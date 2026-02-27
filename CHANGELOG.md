@@ -7,11 +7,32 @@
 
 ---
 
+## [2.1.0] - 2026-02-27
+
+### 新增
+- `config/admins.yaml`：新增 GitHub API 集成，`GITHUB_TOKEN`、`GITHUB_REPO`、`GITHUB_BASE_BRANCH` 环境变量声明
+- 知识库回滚流程说明
+
+### 变更
+- `config/admins.yaml`：`superadmin`（单对象）改为 `superadmins`（列表），支持多个 superadmin
+- `SKILL.md`：admin 知识库更新方式从手动 git PR 改为 Bot 调用 GitHub API 直接提交
+- `SKILL.md`：admin 管理命令说明更新，明确 Bot 只生成配置预览，superadmin 手动提交
+- `SKILL.md`：版本管理规则明确区分 knowledgeVersion（admin 更新）与 version（superadmin 更新）
+- `SOUL.md`：admin/superadmin 权限描述修正，移除与安全边界矛盾的"执行系统命令"表述
+- 统一大小写规范：角色名全部小写（`superadmin`/`admin`/`user`），YAML key 使用复数（`superadmins`/`admins`）
+
+### 修复
+- 移除 `SOUL.md` 中对已删除文件的引用（`product-info.md`、`glossary.md`、`AGENTS.md`）
+- 修正 `GITHUB_TOKEN` 所需权限声明（只需 `contents:write`，移除多余的 `pull-requests:write`）
+- 修正添加管理员命令格式说明，备注名不允许含空格
+
+---
+
 ## [2.0.0] - 2026-02-27
 
 ### 重大变更（Breaking Changes）
 - 权限配置文件从根目录 `access-control.md` 迁移至 `config/access-control.md`
-- Admin 知识库更新方式从对话内直接修改改为 git PR 工作流
+- admin 知识库更新方式从对话内直接修改改为 git PR 工作流
 - 平台支持扩展：新增 Discord（原仅支持 Telegram）
 
 ### 新增

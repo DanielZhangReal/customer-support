@@ -30,8 +30,8 @@ customer-support/
 ├── CHANGELOG.md             ← Version history
 ├── README.md                ← Setup & git PR workflow guide
 ├── config/
-│   ├── admins.yaml          ← Data: SuperAdmin and Admin platform IDs (SuperAdmin only)
-│   └── access-control.md   ← Docs: permission rules and matrix (SuperAdmin only)
+│   ├── admins.yaml          ← Data: superadmin and admin platform IDs (superadmin only)
+│   └── access-control.md   ← Docs: permission rules and matrix (superadmin only)
 └── knowledge/               ← Content layer, read on demand
     ├── _index.md            ← Tag index + knowledgeVersion
     ├── overview.md          ← Product/project overview + glossary
@@ -49,8 +49,8 @@ customer-support/
 
 | Files | Who Can Modify | How |
 |-------|---------------|-----|
-| `knowledge/` | Admin + SuperAdmin | git PR only |
-| All other files (SOUL.md, SKILL.md, config/, etc.) | SuperAdmin only | git PR only |
+| `knowledge/` | admin + superadmin | git PR only |
+| All other files (SOUL.md, SKILL.md, config/, etc.) | superadmin only | git PR only |
 
 **Identity**: Based on platform user IDs (Telegram UID / Discord user ID), never usernames.
 
@@ -69,8 +69,8 @@ customer-support/
 
 ## Version Management
 
-- **Skill version**: `SKILL.md` frontmatter `version` field (managed by SuperAdmin)
-- **Knowledge version**: `knowledge/_index.md` frontmatter `knowledgeVersion` field (updated with each Admin PR)
+- **Skill version**: `SKILL.md` frontmatter `version` field (managed by superadmin)
+- **Knowledge version**: `knowledge/_index.md` frontmatter `knowledgeVersion` field (updated with each admin PR)
 - Versioning follows Semantic Versioning: patch for content updates, minor for logic changes, major for architecture changes
 
 ## Customizing the Template
@@ -86,7 +86,7 @@ grep -r "example.com" .        # example URLs
 ## Key Behavioral Rules (defined in SKILL.md + SOUL.md)
 
 **Escalation to human/community channel is mandatory when:**
-1. User explicitly requests human handling
+1. user explicitly requests human handling
 2. Account security issue (suspected breach/anomalous login)
 3. Legal, compliance, or privacy-sensitive questions
 4. 3+ consecutive questions with no knowledge base answer
