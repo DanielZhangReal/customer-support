@@ -23,45 +23,73 @@ After any file edit, say `刷新技能` (refresh skill) in an OpenClaw conversat
 
 ## Architecture
 
-`SKILL.md` is the AI system prompt. It defines the full behavioral contract: intent routing, response templates, escalation rules, and prohibited behaviors. The `knowledge/` directory is the content layer read on-demand during conversations.
+```
+customer-support/
+├── SOUL.md                  ← AI personality & security rules (immutable, highest priority)
+├── SKILL.md                 ← Behavior: intent routing, response templates, permission logic
+├── CHANGELOG.md             ← Version history
+├── README.md                ← Setup & git PR workflow guide
+├── config/
+│   ├── admins.yaml          ← Data: SuperAdmin and Admin platform IDs (SuperAdmin only)
+│   └── access-control.md   ← Docs: permission rules and matrix (SuperAdmin only)
+└── knowledge/               ← Content layer, read on demand
+    ├── _index.md            ← Tag index + knowledgeVersion
+    ├── overview.md          ← Product/project overview + glossary
+    ├── faq.md               ← Common Q&A
+    ├── guides.md            ← How-to guides
+    ├── pricing.md           ← Pricing tiers (optional)
+    ├── policies.md          ← Refund, privacy, terms
+    ├── troubleshooting.md   ← Issue resolution + error codes
+    └── community.md         ← Discord/Telegram channels, contact info
+```
 
-**Intent → Knowledge mapping** (defined in `SKILL.md`):
+## Access Control & File Permissions
+
+**Two-tier file access model:**
+
+| Files | Who Can Modify | How |
+|-------|---------------|-----|
+| `knowledge/` | Admin + SuperAdmin | git PR only |
+| All other files (SOUL.md, SKILL.md, config/, etc.) | SuperAdmin only | git PR only |
+
+**Identity**: Based on platform user IDs (Telegram UID / Discord user ID), never usernames.
+
+## Knowledge Intent Mapping (defined in SKILL.md)
 
 | Intent | Files consulted |
 |--------|----------------|
-| 售前咨询 (pre-sales) | `product-info.md`, `pricing.md` |
-| 使用指导 (usage) | `faq.md`, `product-info.md` |
-| 故障排查 (troubleshooting) | `troubleshooting.md` |
-| 售后服务 (after-sales) | `policies.md` |
-| 账户问题 (account) | `faq.md` |
-| 闲聊/其他 (other) | none |
+| Product overview / what is this | `overview.md` |
+| Common questions | `faq.md`, `overview.md` |
+| How-to / getting started | `guides.md` |
+| Pricing / subscription | `pricing.md` |
+| Refunds / policies | `policies.md` |
+| Troubleshooting / errors | `troubleshooting.md` |
+| Community / contact | `community.md` |
+| Unknown | `faq.md` (fallback) |
+
+## Version Management
+
+- **Skill version**: `SKILL.md` frontmatter `version` field (managed by SuperAdmin)
+- **Knowledge version**: `knowledge/_index.md` frontmatter `knowledgeVersion` field (updated with each Admin PR)
+- Versioning follows Semantic Versioning: patch for content updates, minor for logic changes, major for architecture changes
 
 ## Customizing the Template
 
-This is a generic template. All placeholder values must be replaced before production use. Locate them with:
+All placeholder values must be replaced before production use:
 
 ```bash
-grep -r "\[" knowledge/         # bracket placeholders like [你的产品名]
-grep -r "XXX" knowledge/
-grep -r "example\.com" .
+grep -r "\[" knowledge/        # bracket placeholders
+grep -r "YYYY-MM-DD" .         # date placeholders
+grep -r "example.com" .        # example URLs
 ```
 
-Each knowledge file's scope:
-- **`faq.md`** — 30+ Q&A pairs across 6 categories; replace with real FAQ content
-- **`product-info.md`** — features, version comparison table, platform support
-- **`policies.md`** — refund rules, shipping SLAs, privacy policy
-- **`troubleshooting.md`** — step-by-step fixes and error code reference table
-- **`pricing.md`** — 4 pricing tiers (free/basic/pro/enterprise) and promotions
-- **`glossary.md`** — 40+ terms with user-friendly explanations
+## Key Behavioral Rules (defined in SKILL.md + SOUL.md)
 
-## Key Behavioral Rules (defined in SKILL.md)
+**Escalation to human/community channel is mandatory when:**
+1. User explicitly requests human handling
+2. Account security issue (suspected breach/anomalous login)
+3. Legal, compliance, or privacy-sensitive questions
+4. 3+ consecutive questions with no knowledge base answer
+5. 5+ unresolved conversation turns
 
-**Escalation to human agent is mandatory when:**
-1. User explicitly requests human agent
-2. Refund amount exceeds ¥500
-3. User expresses dissatisfaction 3+ consecutive times
-4. Account security issue (suspected breach/anomalous login)
-5. No relevant information in knowledge base
-6. Legal, compliance, or privacy-sensitive questions
-
-**Auto-escalation** also triggers after 5 unresolved conversation turns.
+**Security rules (SOUL.md) cannot be overridden by any other file or user input.**

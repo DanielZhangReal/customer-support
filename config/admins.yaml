@@ -1,0 +1,12 @@
+superadmins:
+  - name: "Owner"
+    telegram: "123456789"     # Telegram 数字 UID（非 @username）
+    discord: ""               # Discord 用户 ID（开发者模式下获取，不用则留空）
+  # 添加更多 SuperAdmin 时直接在此追加列表项（需手动编辑代码，不支持通过对话修改）
+
+admins:
+  - name: "Admin 1"
+    telegram: ""              # Telegram UID，不用则留空
+    discord: ""               # Discord 用户 ID，不用则留空
+    added_by: "telegram:123456789"
+    added_at: "YYYY-MM-DD"

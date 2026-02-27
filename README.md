@@ -1,66 +1,129 @@
-# 🤖 OpenClaw 智能客服 Skill
+# OpenClaw Customer Support Skill
 
-一个开箱即用的智能客服技能包，安装后即可基于内置知识库自动回复用户咨询。
+通用智能客服 Skill 模板，支持 Telegram 和 Discord 双平台，基于知识库自动回答问题，三级权限管理，知识库通过 git PR 维护。
 
-## 📁 文件结构
+## 文件结构
 
 ```
 customer-support/
-├── SKILL.md                     ← 技能定义（意图识别、话术规范、转人工规则）
+├── SOUL.md                      ← AI 人格定义、安全规则（SuperAdmin 才能修改）
+├── SKILL.md                     ← Skill 行为定义：意图路由、回复规范、权限逻辑
+├── CHANGELOG.md                 ← 版本变更记录
 ├── README.md                    ← 本文件
-└── knowledge/                   ← 知识库（全部跟 SKILL.md 在同一目录下）
-    ├── faq.md                   ← 常见问题（30+ 通用 FAQ 模板）
-    ├── product-info.md          ← 产品信息（功能模块、版本对比）
-    ├── policies.md              ← 政策条款（退换货、配送、隐私、SLA）
-    ├── troubleshooting.md       ← 故障排查（登录、支付、页面、错误码）
-    ├── pricing.md               ← 套餐定价（4 档套餐、优惠活动）
-    └── glossary.md              ← 术语表（产品/技术术语的用户友好解释）
+├── config/
+│   └── access-control.md        ← 权限配置：SuperAdmin 和 Admin 的平台 ID（SuperAdmin 才能修改）
+└── knowledge/                   ← 知识库（Admin 可通过 git PR 修改）
+    ├── _index.md                ← 知识库版本 + 标签索引（每次 PR 必须更新）
+    ├── overview.md              ← 产品/项目概述、核心功能、术语
+    ├── faq.md                   ← 常见问题解答
+    ├── guides.md                ← 使用指南、快速上手
+    ├── pricing.md               ← 定价方案（可选，不适用则删除）
+    ├── policies.md              ← 退款、隐私、服务条款
+    ├── troubleshooting.md       ← 故障排查、错误码
+    └── community.md             ← Discord/Telegram 社区、联系方式
 ```
 
-所有文件都在一个文件夹里，**不需要手动 cp 或移动任何文件**。
+---
 
-## 🚀 安装
+## 安装
 
-### 方式一：ClawHub 一键安装
-
+### 方式一：ClawHub
 ```bash
 clawhub install customer-support
 ```
 
-### 方式二：GitHub 链接安装
-
-直接把仓库链接粘贴到 OpenClaw 对话里：
-
-```
-安装这个 skill：https://github.com/你的用户名/openclaw-customer-support
-```
-
-### 方式三：手动安装
-
+### 方式二：手动安装
 ```bash
-git clone https://github.com/你的用户名/openclaw-customer-support.git
-mv openclaw-customer-support ~/.openclaw/workspace/skills/customer-support
+git clone <repo-url>
+mv customer-support ~/.openclaw/workspace/skills/customer-support
 ```
 
-安装完成后在对话中说「刷新技能」即可。
+安装完成后在对话中说「刷新技能」生效。
 
-## ✏️ 自定义
+---
 
-安装后你需要把知识库内容替换成自己的业务信息：
+## 初始配置（必做）
 
-1. 编辑 `knowledge/` 下的 `.md` 文件，替换为你的真实内容
-2. 搜索 `example.com`、`[你的产品名]`、`XXX` 等占位符逐一替换
-3. 在对话中说「刷新技能」让改动生效
+### 1. 配置权限
 
-## 💡 功能特性
+编辑 `config/admins.yaml`，填入 SuperAdmin 和 Admin 的平台 ID：
 
-- ✅ 6 大意图自动分类（售前/使用/故障/售后/账户/其他）
-- ✅ 多文档交叉检索
-- ✅ 预设话术模板（直答/追问/投诉/兜底）
-- ✅ 6 种场景自动转人工
-- ✅ 多轮对话上下文管理
-- ✅ 安全兜底（不编造、不泄露、不承诺）
+```yaml
+superadmins:
+  - name: "Owner"
+    telegram: "你的 Telegram UID"   # 向 @userinfobot 发消息获取
+    discord: "你的 Discord 用户 ID" # Discord 开发者模式 → 右键用户 → 复制 ID
 
-## 📝 License
+admins:
+  - name: "管理员 1"
+    telegram: "UID"
+    discord: "用户 ID"
+    added_by: "telegram:superadmin_uid"
+    added_at: "YYYY-MM-DD"
+```
+
+### 2. 填写知识库
+
+用实际业务内容替换 `knowledge/` 下各文件中的 `[...]` 占位符，从 `overview.md` 开始。
+
+替换前先全局搜索占位符：
+```bash
+grep -r "\[" knowledge/
+grep -r "YYYY-MM-DD" knowledge/
+grep -r "example.com" knowledge/
+```
+
+### 3. 刷新技能
+
+在 OpenClaw 对话中说「刷新技能」应用所有更改。
+
+---
+
+## 知识库维护
+
+### Admin 更新知识库（仅限 `knowledge/`）
+
+1. 在对话中告诉 Bot 要更新什么，Bot 会整理好格式给你确认
+2. Admin 确认后，Bot 自动调用 GitHub API 提交到 main 分支
+3. 说「刷新技能」生效
+
+> 需在环境变量中配置 `GITHUB_TOKEN`（`contents:write` 权限）、`GITHUB_REPO`（`owner/repo`）、`GITHUB_BASE_BRANCH`（默认 `main`）。
+
+### SuperAdmin 更新系统文件
+
+系统文件（SOUL.md、SKILL.md、config/ 等）只能通过手动 git PR 修改，提交时需同步更新 `SKILL.md` 版本号和 `CHANGELOG.md`。
+
+### 版本号规则
+
+| 变更类型 | 版本号 | 示例 |
+|---------|--------|------|
+| `knowledge/` 内容更新 | patch（x.x.**X**） | 1.0.0 → 1.0.1 |
+| SKILL.md 逻辑/路由变更 | minor（x.**X**.x） | 1.0.0 → 1.1.0 |
+| 架构重构、SOUL.md、权限模型变更 | major（**X**.x.x） | 1.0.0 → 2.0.0 |
+
+---
+
+## 权限说明
+
+| 角色 | 能做什么 | 不能做什么 |
+|------|---------|----------|
+| **SuperAdmin** | 全部权限 | — |
+| **Admin** | 通过 PR 更新 `knowledge/`、知识库查询 | 修改系统文件、管理权限 |
+| **User** | 知识库查询 | 所有写操作 |
+
+身份识别基于平台用户 ID（Telegram UID / Discord 用户 ID），与用户名无关。
+
+---
+
+## 平台支持
+
+| 平台 | 身份字段 | 获取方式 |
+|------|---------|---------|
+| Telegram | 数字 UID（`from.id`） | 向 [@userinfobot](https://t.me/userinfobot) 发消息 |
+| Discord | Snowflake 用户 ID（`user.id`） | 开发者模式 → 右键用户 → 复制用户 ID |
+
+---
+
+## License
 
 MIT
