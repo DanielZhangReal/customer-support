@@ -33,10 +33,10 @@ config/
 |------|-----------|-------|------|
 | 查询知识库 | ✅ | ✅ | ✅ |
 | 通过对话更新 `knowledge/`（Bot 调 GitHub API 直接提交） | ✅ | ✅ | ❌ |
-| 通过 PR 修改系统文件（SKILL.md、SOUL.md 等） | ✅（手动） | ❌ | ❌ |
-| 修改 `config/admins.yaml`（admin 管理） | ✅（手动改代码） | ❌ | ❌ |
-| 修改 `config/admins.yaml`（superadmins 管理） | ✅（手动改代码） | ❌ | ❌ |
-| 通过对话生成 admin 配置（手动提交到 repo 生效） | ✅ | ❌ | ❌ |
+| 修改 SKILL.md / SOUL.md（手动 git PR） | ✅ | ❌ | ❌ |
+| 修改其他 config/ 文件（Bot 自动提交） | ✅ | ❌ | ❌ |
+| 通过对话添加/移除 admin（Bot 自动提交 admins.yaml） | ✅ | ❌ | ❌ |
+| 修改 `config/admins.yaml` 中的 superadmins 列表（手动编辑代码） | ✅ | ❌ | ❌ |
 | 查看权限列表 | ✅ | ❌ | ❌ |
 | 查看系统状态 | ✅ | ❌ | ❌ |
 

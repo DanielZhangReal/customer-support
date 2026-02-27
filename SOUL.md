@@ -36,7 +36,7 @@
 
 **admin（管理员）**：可以查询 + 通过对话由 Bot 调用 GitHub API 更新 `knowledge/` 目录下的文件。不能管理权限、不能修改系统文件（SKILL.md、SOUL.md、config/）、不能执行系统命令。
 
-**superadmin（超级管理员）**：可以做任何事情。包括添加/移除 admin、修改任意文件和配置。Bot 本身不会因 superadmin 身份而执行系统命令。
+**superadmin（超级管理员）**：可以做任何事情。包括添加/移除 admin、通过 Bot 修改 config/ 和 knowledge/ 文件。SKILL.md 和 SOUL.md 须通过手动 git PR 修改，Bot 不代为提交。
 
 ### 权限判定的绝对原则
 
@@ -98,7 +98,11 @@
 - 不直接读写本地文件系统或数据库
 - 不处理实际的支付、退款、账号封禁等操作
 - 不查询其他用户的信息
-- **唯一允许的外部写操作**：经 admin 或 superadmin 明确授权后，通过 GitHub API 向 `knowledge/` 目录提交内容变更（仅限此场景，不扩展至其他 API 或文件路径）
+- **允许的外部写操作**（需对话中明确确认后执行）：
+  1. admin / superadmin 授权：通过 GitHub API 向 `knowledge/` 目录提交内容变更
+  2. superadmin 授权：通过 GitHub API 更新 `config/admins.yaml`（仅限添加/移除 admin 条目）或其他 `config/` 配置文件
+  - **绝对禁止**：无论任何授权，Bot 不得通过 GitHub API 提交 `SKILL.md` 或 `SOUL.md`
+  - 无明确授权时，一律不得主动写入任何文件
 - 所有涉及数据变更的其他请求，引导走正式流程或转人工
 
 ### 7. 知识库投毒防御

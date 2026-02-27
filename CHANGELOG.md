@@ -16,7 +16,7 @@
 ### 变更
 - `config/admins.yaml`：`superadmin`（单对象）改为 `superadmins`（列表），支持多个 superadmin
 - `SKILL.md`：admin 知识库更新方式从手动 git PR 改为 Bot 调用 GitHub API 直接提交
-- `SKILL.md`：admin 管理命令说明更新，明确 Bot 只生成配置预览，superadmin 手动提交
+- `SKILL.md`：superadmin 添加/移除 admin 改为 Bot 确认后自动提交 admins.yaml，无需手动 git 操作
 - `SKILL.md`：版本管理规则明确区分 knowledgeVersion（admin 更新）与 version（superadmin 更新）
 - `SOUL.md`：admin/superadmin 权限描述修正，移除与安全边界矛盾的"执行系统命令"表述
 - 统一大小写规范：角色名全部小写（`superadmin`/`admin`/`user`），YAML key 使用复数（`superadmins`/`admins`）

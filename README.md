@@ -11,7 +11,7 @@ customer-support/
 ├── CHANGELOG.md                 ← 版本变更记录
 ├── README.md                    ← 本文件
 ├── config/
-│   ├── admins.yaml              ← 权限数据：superadmins 和 admins 的平台 ID（手动编辑，superadmin 专属）
+│   ├── admins.yaml              ← 权限数据：superadmins 和 admins 的平台 ID（superadmin 专属；add/remove admin 可通过对话自动提交，superadmins 列表须手动编辑）
 │   └── access-control.md        ← 权限文档：角色说明与权限矩阵
 └── knowledge/                   ← 知识库（admin 通过对话更新，Bot 自动提交）
     ├── _index.md                ← 知识库版本 + 标签索引（每次 Bot 提交时自动更新）
@@ -85,14 +85,15 @@ grep -r "example.com" knowledge/
 ### admin 更新知识库（仅限 `knowledge/`）
 
 1. 在对话中告诉 Bot 要更新什么，Bot 会整理好格式给你确认
-2. admin 确认后，Bot 自动调用 GitHub API 提交到 main 分支
+2. admin 确认后，Bot 自动调用 GitHub API 提交到 $GITHUB_BASE_BRANCH（默认 main）
 3. 说「刷新技能」生效
 
 > 需在环境变量中配置 `GITHUB_TOKEN`（`contents:write` 权限）、`GITHUB_REPO`（`owner/repo`）、`GITHUB_BASE_BRANCH`（默认 `main`）。
 
 ### superadmin 更新系统文件
 
-系统文件（SOUL.md、SKILL.md、config/ 等）只能通过手动 git PR 修改，提交时需同步更新 `SKILL.md` 版本号和 `CHANGELOG.md`。
+- **SKILL.md / SOUL.md**：只能通过手动 git PR 修改，提交时需同步更新版本号和 `CHANGELOG.md`
+- **其他 config/ 文件**：可通过对话由 Bot 自动提交，流程与知识库更新相同
 
 ### 版本号规则
 
