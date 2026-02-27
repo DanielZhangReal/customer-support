@@ -6,7 +6,7 @@ maintainer: ""
 
 # 知识库索引
 
-> **Admin PR 必读**：每次提交 PR 修改知识库时，必须同步更新本文件的 `knowledgeVersion`（patch +1）和 `lastUpdated`。
+> **注意**：本文件由 Bot 在每次提交知识库变更时自动更新（`knowledgeVersion` patch +1、`lastUpdated` 更新为当天日期），无需手动修改。
 
 ---
 
